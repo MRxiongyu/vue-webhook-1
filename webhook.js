@@ -21,15 +21,18 @@ const app = http.createServer((req, res) => {
             const signature = req.headers['x-hub-signature']
             const event = req.headers['x-github-event']
             const body = Buffer.concat(buffers)
-            if(sign(body) === signature && event === 'push') {
-                res.setHeader('Content-type', 'application/json')
-                res.end(JSON.stringify({
-                    ok: true
-                }))
+            if(sign(body) !== signature) {
+                return res.end('NOT FOUND')
+            }
+            res.setHeader('Content-type', 'application/json')
+            res.end(JSON.stringify({
+                ok: true
+            }))
+            if(event === 'push') {
                 const payload = JSON.parse(body.toString())
                 const spawn = child_process.spawn
                 const buffers = []
-                const child = spawn('sh', ['./${payload.repository.name}.sh'])
+                const child = spawn('sh', [`./${payload.repository.name}.sh`])
 
                 child.stdout.on('data', (buffer) => {
                     buffers.push(buffer)
@@ -45,8 +48,6 @@ const app = http.createServer((req, res) => {
                     `)
 
                 })
-            } else {
-                return res.end('NOT FOUND')
             }
         })
 
