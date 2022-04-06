@@ -11,6 +11,6 @@ echo '删除旧容器'
 docker stop vue-backup-container
 docker rm vue-backup-container
 echo '创建容器'
-docker container run -p 3000:3000 vue-backup-container -d vue-backup:0.0.1
+docker container run -p 3000:3000 --name vue-backup-container -d vue-backup:0.0.1
 
 
