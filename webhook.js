@@ -50,9 +50,9 @@ const app = http.createServer((req, res) => {
                 })
             }
         })
-
+    } else {
+        res.end('NOT FOUNT')
     }
-    return res.end('NOT FOUNT')
 })
 
 
