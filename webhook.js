@@ -32,6 +32,7 @@ const app = http.createServer((req, res) => {
                 const payload = JSON.parse(body.toString())
                 const spawn = child_process.spawn
                 const buffers = []
+                console.log('执行脚本')
                 const child = spawn('sh', [`./${payload.repository.name}.sh`])
 
                 child.stdout.on('data', (buffer) => {
@@ -39,6 +40,7 @@ const app = http.createServer((req, res) => {
                 })
                 child.stdout.on('end', () =>{
                     const log = Buffer.concat(buffers).toString()
+                    console.log('发送邮箱')
                     nodemailer(`
                         <h3>部署时间：${new Date()}</h1>
                         <h3>部署人: ${payload.pusher.name}</h1>
